@@ -37,7 +37,8 @@
   setJqueryMap = function(){
     jqueryMap = {
       $loading : $('.loading'),
-      $ulTracks: $('.tracks')
+      $ulTracks: $('.tracks'),
+      $main: $('.main')
     };
   };
 
@@ -61,7 +62,7 @@
   };
 
   outputToDom = function( arr ){
-    var track_arr, track_arr_count, track_single, track_user, track_name, track_img, i, j, track_ind, track_tracks_count, track_url, track_art, $li;
+    var track_arr, track_arr_count, track_single, track_user, track_name, track_img, i, j, track_ind, track_tracks_count, track_url, track_art, $li, $tracks, $panel;
     
     track_arr = arr;
     track_arr_count = track_arr.length;
@@ -70,7 +71,7 @@
       track_single = track_arr[i];
       track_user = track_arr[i]['@attr'].user;
       track_tracks_count = track_arr[i].track.length;
-      
+      /*
       for( j = 0; j < track_tracks_count; j++ ){
         track_ind  = track_arr[i].track[j];
         track_name = track_ind.name;
@@ -86,6 +87,27 @@
 
         $li = $('<li class="track"><a href="' + track_url + '"><span class="user_name">' + track_user + '</span></div><div class="overlay"></div><div class="img"><img src="' + track_img + '" alt="#" /></div><div class="track_info"><h3 class="track_name">' + track_name + '</h3><h5 class="artist_name">' + track_art + '</h5></div></a></li>');
         jqueryMap.$ulTracks.append( $li );
+      }
+      */
+
+      $panel = $('<div class="panel" data-panel-user=' + track_user + '">' + '<h1 class="user_name">' + track_user + '</h1>' + '<div class="tracks_all"></div></div>');
+      jqueryMap.$main.append( $panel );
+
+      for( j = 0; j < track_tracks_count; j++ ){
+        track_ind  = track_arr[i].track[j];
+        track_name = track_ind.name;
+        track_url  = track_ind.url;
+        track_art  = track_ind.artist.name;
+
+        if( track_ind.image ) {
+          track_img = track_ind.image[3]['#text'];
+        } else {
+          console.log('no track image');
+          track_img = configMap.last_fm.img_missing;
+        }
+        $tracks = $('<li class="track_info">' + track_name + '</li>');
+        $panel.find('.tracks_all').append( $tracks );
+
       }
 
     }
@@ -158,11 +180,11 @@
         if( result.toptracks.track ){
           all_tracks_arr.push( result.toptracks );
         } else {
-          console.log( result.toptracks.user + ' does not have any tracks!' );
+          console.log( ' -- ' + result.toptracks.user + ' does not have any tracks!' );
         }
         //all_tracks_arr.push.apply( all_tracks_arr, result.toptracks.track );
       });
-      console.log(all_tracks_arr);
+      //console.log( all_tracks_arr );
       outputToDom( all_tracks_arr );
       jqueryMap.$loading.hide();
 

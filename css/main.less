@@ -42,6 +42,7 @@ h2 {
 }
 
 .header {
+	display:none;
 	height: 54px;
 	line-height: 54px;
 	text-align: center;
@@ -71,18 +72,36 @@ h2 {
 	max-width:@containerWidth;
 }
 
+.main {
+	width:5000px;
+	height: 100%;
+	min-height: 460px;
+	overflow: hidden;
+	position: absolute;
+}
+
+.panel {
+	float:left;
+	position: relative;
+	height:100%;
+	width:350px;
+	background-color:#222;
+	border-right:1px solid rgba(255,255,255,.1);
+}
+
 .tracks {
 	overflow:hidden;
-	margin:2em 0;
+	//margin:2em 0;
 }
 
 .track {
 	position: relative;
+	float:left;
 	overflow: hidden;
 	width:@trackWidth;
-	height:@trackWidth;
-	margin:0 @trackMargin @trackMargin 0;
-	float: left;
+	height:100%;
+	//height:@trackWidth;
+	//margin:0 @trackMargin @trackMargin 0;
 	.box-shadow(0 2px 3px rgba(0,0,0,.65));
 	//.transition(border 250ms ease-out);
 
@@ -128,19 +147,19 @@ h2 {
 }
 
 .track_info {
-	opacity:1;
-	position:absolute;
-	bottom:0;
-	left:0;
-	z-index:4;
-	min-height: 75px;
-	width: 96%;
-	background:rgba(0,0,0,0.75);
-	text-align: center;
-	padding:1em;
-	margin:2%;
-	//border:7px solid rgba(255,255,255,0);
-	.transition(~'background 250ms ease-out, border 250ms ease-out, opacity 250ms ease-out');
+	// opacity:1;
+	// position:absolute;
+	// bottom:0;
+	// left:0;
+	// z-index:4;
+	// min-height: 75px;
+	// width: 96%;
+	// background:rgba(0,0,0,0.75);
+	// text-align: center;
+	// padding:1em;
+	// margin:2%;
+	// //border:7px solid rgba(255,255,255,0);
+	// .transition(~'background 250ms ease-out, border 250ms ease-out, opacity 250ms ease-out');
 }
 
 .artist_name {
