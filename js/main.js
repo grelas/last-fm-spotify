@@ -17,7 +17,7 @@
       apiSecret:'3fa3b31b0f3d2fa405012b7be8d4bb42',
       user_list:['grlaspin', 'writethewrxng','opeyre','alanchais','deadfinch','hardenburger','monsonian','Glorman','JSchitty'],
       tracks_count: 3,
-      tracks_period: '3month',
+      tracks_period: '7day',
       img_missing: 'img/blank.jpg'
     }
   },
@@ -62,8 +62,8 @@
   };
 
   outputToDom = function( arr ){
-    var track_arr, track_arr_count, track_single, track_user, track_name, track_img, i, j, track_ind, track_tracks_count, track_url, track_art, $li, $tracks, $panel;
-    
+    var track_arr, track_arr_count, track_single, track_user, track_name, track_img, i, j, track_ind, track_tracks_count, track_url, track_art, panel_width, $li, $tracks, $panel;
+    panel_width = 0;
     track_arr = arr;
     track_arr_count = track_arr.length;
 
@@ -90,7 +90,7 @@
       }
       */
 
-      $panel = $('<div class="panel" data-panel-user=' + track_user + '">' + '<h1 class="user_name">' + track_user + '</h1>' + '<div class="tracks_all"></div></div>');
+      $panel = $('<div class="panel" data-panel-user=' + track_user + '">' + '<h1 class="user_name">' + track_user + '</h1>' + '<ul class="tracks_all"></ul></div>');
       jqueryMap.$main.append( $panel );
 
       for( j = 0; j < track_tracks_count; j++ ){
@@ -105,12 +105,21 @@
           console.log('no track image');
           track_img = configMap.last_fm.img_missing;
         }
-        $tracks = $('<li class="track_info">' + track_name + '</li>');
+        $tracks = $('<li class="track"><a href="' + track_url + '" target="_blank"></div><div class="overlay"></div><div class="img"><img src="' + track_img + '" alt="#" /></div><div class="track_info"><h3 class="track_name">' + track_name + '</h3><h5 class="artist_name">' + track_art + '</h5></div></a></li>');
         $panel.find('.tracks_all').append( $tracks );
 
       }
 
     }
+
+
+    $('.panel').each(function(){
+        panel_width += $(this).outerWidth( true );
+    });
+
+    jqueryMap.$main.width( panel_width );
+
+    
   };
   /*
   createTracksNode = function( arr ){
