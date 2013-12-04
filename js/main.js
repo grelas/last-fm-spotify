@@ -12,7 +12,8 @@
   var configMap = {
     last_fm : {
       url: 'http://ws.audioscrobbler.com/2.0/',
-      apiCall: 'user.gettoptracks',
+      method_tracks: 'user.gettoptracks',
+      method_user: 'user.getInfo',
       apiKey:'5c66dde901367412ebee47ff5b7b47c1',
       apiSecret:'3fa3b31b0f3d2fa405012b7be8d4bb42',
       user_list:['grlaspin', 'writethewrxng','opeyre','alanchais','deadfinch','hardenburger','monsonian','Glorman','JSchitty'],
@@ -32,6 +33,7 @@
   getTracks,
   outputToDom,
   createTracksNode,
+  getInfo,
   initModule;
 
   setJqueryMap = function(){
@@ -145,10 +147,28 @@
   };
   */
 
+  getInfo = function( user ) {
+    var dfd, url;
+    url = configMap.last_fm.url + '?method=' + configMap.last_fm.method_user + '&user=' + user + '&api_key='+ configMap.last_fm.apiKey +'&format=json';
+    dfd = $.Deferred();
+
+    $.getJSON( url, function(a) {
+      //console.log( "success" );
+    })
+    .done(function( results ) {
+      dfd.resolve( results );
+    })
+    .fail(function( error ) {
+      //console.log( "error" );
+    });
+
+    return dfd.promise();
+  };
+
   getTracks = function( user ){
     var dfd, last_fm, last_fm_url;
 
-    last_fm_url = configMap.last_fm.url + '?method=' + configMap.last_fm.apiCall + '&user=' + user + '&limit='+ configMap.last_fm.tracks_count + '&period=' + configMap.last_fm.tracks_period + '&api_key='+ configMap.last_fm.apiKey +'&format=json';
+    last_fm_url = configMap.last_fm.url + '?method=' + configMap.last_fm.method_tracks + '&user=' + user + '&limit='+ configMap.last_fm.tracks_count + '&period=' + configMap.last_fm.tracks_period + '&api_key='+ configMap.last_fm.apiKey +'&format=json';
     dfd = $.Deferred();
 
     $.getJSON( last_fm_url, function(a) {
@@ -193,12 +213,9 @@
         }
         //all_tracks_arr.push.apply( all_tracks_arr, result.toptracks.track );
       });
-      //console.log( all_tracks_arr );
+
       outputToDom( all_tracks_arr );
       jqueryMap.$loading.hide();
-
-      //shuffled_arr = shuffle( all_tracks_arr );
-      //createTracksNode( shuffled_arr );
 
     }).fail(function( error ){
       //console.log( error );
