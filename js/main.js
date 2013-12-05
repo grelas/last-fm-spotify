@@ -27,7 +27,8 @@
   jqueryMap = {},
 
   // Delcare all module scope variables 
-  shuffle,
+  util_shuffle,
+  util_intersect,
   setJqueryMap,
   fetchTracks,
   getTracks,
@@ -44,7 +45,7 @@
     };
   };
 
-  shuffle = function( array ) {
+  util_shuffle = function( array ) {
     var i = array.length, temp, j;
 
     // While there remain elements to shuffle...
@@ -61,6 +62,25 @@
     }
 
     return array;
+  };
+
+  util_intersect = function( a, b ) {
+    var ai = 0, bi = 0, result;
+      result = [];
+
+      while( ai < a.length && bi < b.length ) {
+         if( a[ai] < b[bi] ){
+          ai++;
+        } else if( a[ai] > b[bi] ){
+          bi++;
+        } else {
+           result.push( a[ai] );
+           ai++;
+           bi++;
+         }
+      }
+
+    return result;
   };
 
   outputToDom = function( arr ){
@@ -220,6 +240,15 @@
     }).fail(function( error ){
       //console.log( error );
     });
+
+
+    //
+    // var c = $.map(a1,function(a){
+    //   return $.inArray(a, b1) < 0 ? null : a;
+    // });
+    
+    //
+
   };
 
   // Export public methods explicitly by returning them in a map
