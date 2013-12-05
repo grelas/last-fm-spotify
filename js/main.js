@@ -18,7 +18,7 @@
       apiSecret:'3fa3b31b0f3d2fa405012b7be8d4bb42',
       user_list:['grlaspin', 'writethewrxng','opeyre','alanchais','deadfinch','hardenburger','monsonian','Glorman','JSchitty'],
       tracks_count: 3,
-      tracks_period: '7day',
+      tracks_period: 'overall',
       img_missing: 'img/blank.jpg'
     }
   },
@@ -29,9 +29,11 @@
   // Delcare all module scope variables 
   util_shuffle,
   util_intersect,
+  util_eliminateDup,
   setJqueryMap,
   fetchTracks,
   getTracks,
+  outputDups,
   outputToDom,
   createTracksNode,
   getInfo,
@@ -81,6 +83,21 @@
       }
 
     return result;
+  };
+
+  util_eliminateDup = function( arr ) {
+    var i,
+        len = arr.length,
+        out = [],
+        obj = {};
+   
+    for (i = 0; i < len; i++) {
+      obj[arr[i]]=0;
+    }
+    for (i in obj) {
+      out.push(i);
+    }
+    return out;
   };
 
   outputToDom = function( arr ){
@@ -142,6 +159,10 @@
     jqueryMap.$main.width( panel_width );
 
     
+  };
+
+  outputDups = function( arr ) {
+    console.log( arr );
   };
   /*
   createTracksNode = function( arr ){
@@ -229,10 +250,52 @@
         if( result.toptracks.track ){
           all_tracks_arr.push( result.toptracks );
         } else {
-          console.log( ' -- ' + result.toptracks.user + ' does not have any tracks!' );
+          console.warn( ' -- ' + result.toptracks.user + ' does not have any tracks!' );
         }
         //all_tracks_arr.push.apply( all_tracks_arr, result.toptracks.track );
       });
+
+      console.log( all_tracks_arr );
+      
+      //
+      var hash = (function() {
+        var keys = {};
+        return {
+            contains: function(key) {
+                return keys[key] === true;
+            },
+            add: function(key) {
+                if (keys[key] !== true)
+                {
+                    keys[key] = true;
+                }
+            }
+        };
+      })();
+
+      var key = null;
+      var noDupes = [];
+      var dupes = [];
+      for (var i = 0; i < all_tracks_arr.length; i++)
+      {
+          // loop through each track:
+          for (var j = 0; j < all_tracks_arr[i].track.length; j++)
+          {
+              key = all_tracks_arr[i].track[j].mbid;
+              if (!hash.contains(key))
+              {
+                  hash.add(key);
+                  noDupes.push(all_tracks_arr[i].track[j]); // if not duplicate
+              }
+              else
+              {
+                  dupes.push(all_tracks_arr[i].track[j]); // if duplicate
+              }
+          }
+      }
+      console.log(noDupes);
+      console.log(dupes);
+      //
 
       outputToDom( all_tracks_arr );
       jqueryMap.$loading.hide();
@@ -241,13 +304,6 @@
       //console.log( error );
     });
 
-
-    //
-    // var c = $.map(a1,function(a){
-    //   return $.inArray(a, b1) < 0 ? null : a;
-    // });
-    
-    //
 
   };
 
